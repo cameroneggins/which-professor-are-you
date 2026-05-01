@@ -13,97 +13,430 @@
       "text": "Are you politically correct?",
       "type": "choice",
       "choices": [
-        { "text": "Always", "maps_to": "Amy Wilkinson" },
-        { "text": "Mostly", "maps_to": "Benson Farb" },
-        { "text": "Occasionally", "maps_to": "Alex Eskin" },
-        { "text": "Never", "maps_to": "Matt Emerton" }
+        {
+          "text": "Always",
+          "points": {
+            "Amy Wilkinson": 10,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Mostly",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Occasionally",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        },
+        {
+          "text": "Never",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "Do you prefer to respond to emails:",
       "type": "choice",
       "choices": [
-        { "text": "Right now, at any time", "maps_to": "Matt Emerton" },
-        { "text": "Within a day or two", "maps_to": "Benson Farb" },
-        { "text": "I have literally never responded to an email?", "maps_to": "Ewain Gwynne" },
-        { "text": "When pressed", "maps_to": "Alex Eskin" }
+        {
+          "text": "Right now, at any time",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Within a day or two",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "I have literally never responded to an email?",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "When pressed",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        }
       ]
     },
     {
       "text": "What is your Roman Empire?",
       "type": "choice",
       "choices": [
-        { "text": "Consolidation and order", "maps_to": "Benson Farb" },
-        { "text": "Ambition and conquest", "maps_to": "Matt Emerton" },
-        { "text": "Mystery and longevity", "maps_to": "Ewain Gwynne" },
-        { "text": "Curiosity and practicality", "maps_to": "Alex Eskin" },
-        { "text": "Organization and diplomacy", "maps_to": "Amy Wilkinson" }
+        {
+          "text": "Consolidation and order",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Ambition and conquest",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Mystery and longevity",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Curiosity and practicality",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        },
+        {
+          "text": "Organization and diplomacy",
+          "points": {
+            "Amy Wilkinson": 10,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "How many pullups can you do?",
       "type": "choice",
       "choices": [
-        { "text": "0", "maps_to": "Ewain Gwynne" },
-        { "text": "0<x<4", "maps_to": "Benson Farb" },
-        { "text": "4<x<10", "maps_to": "Alex Eskin" },
-        { "text": "10<x", "maps_to": "Amy Wilkinson" },
-        { "text": "As many as Matt Emerton", "maps_to": "Matt Emerton" }
+        {
+          "text": "0",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "0<x<4",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "4<x<10",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        },
+        {
+          "text": "10<x",
+          "points": {
+            "Amy Wilkinson": 10,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "As many as Matt Emerton",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "How often do you fall asleep during seminars or classes?",
       "type": "choice",
       "choices": [
-        { "text": "Literally every time", "maps_to": "Ewain Gwynne" },
-        { "text": "Whenever I am bored", "maps_to": "Alex Eskin" },
-        { "text": "Rarely", "maps_to": "Benson Farb" },
-        { "text": "Never", "maps_to": "Amy Wilkinson" }
+        {
+          "text": "Literally every time",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Whenever I am bored",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        },
+        {
+          "text": "Rarely",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Never",
+          "points": {
+            "Amy Wilkinson": 10,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "Do you personally know any president?",
       "type": "choice",
       "choices": [
-        { "text": "Yes", "maps_to": "Matt Emerton" },
-        { "text": "No", "maps_to": "Benson Farb" }
+        {
+          "text": "Yes",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "No",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "How good is your handwriting?",
       "type": "choice",
       "choices": [
-        { "text": "Anyone can read it", "maps_to": "Benson Farb" },
-        { "text": "I can read it myself", "maps_to": "Matt Emerton" },
-        { "text": "It is a safe encoding tool", "maps_to": "Ewain Gwynne" }
+        {
+          "text": "Anyone can read it",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "I can read it myself",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "It is a safe encoding tool",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "Do you think or ask AI first?",
       "type": "choice",
       "choices": [
-        { "text": "Think", "maps_to": "Alex Eskin" },
-        { "text": "AI", "maps_to": "Amy Wilkinson" }
+        {
+          "text": "Think",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        },
+        {
+          "text": "AI",
+          "points": {
+            "Amy Wilkinson": 10,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "How often do you update your website?",
       "type": "choice",
       "choices": [
-        { "text": "Weekly", "maps_to": "Matt Emerton" },
-        { "text": "Monthly", "maps_to": "Alex Eskin" },
-        { "text": "Yearly", "maps_to": "Benson Farb" },
-        { "text": "Never", "maps_to": "Ewain Gwynne" },
-        { "text": "I will never make a website", "maps_to": "Amy Wilkinson" }
+        {
+          "text": "Weekly",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Monthly",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 10
+          }
+        },
+        {
+          "text": "Yearly",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Never",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "I will never make a website",
+          "points": {
+            "Amy Wilkinson": 10,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        }
       ]
     },
     {
       "text": "How long do you stay in your office?",
       "type": "choice",
       "choices": [
-        { "text": "Until 3pm", "maps_to": "Benson Farb" },
-        { "text": "Until 9pm", "maps_to": "Matt Emerton" },
-        { "text": "Never", "maps_to": "Ewain Gwynne" }
+        {
+          "text": "Until 3pm",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 10,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Until 9pm",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 10,
+            "Ewain Gwynne": 0,
+            "Alex Eskin": 0
+          }
+        },
+        {
+          "text": "Never",
+          "points": {
+            "Amy Wilkinson": 0,
+            "Benson Farb": 0,
+            "Matt Emerton": 0,
+            "Ewain Gwynne": 10,
+            "Alex Eskin": 0
+          }
+        }
       ]
     }
   ]
