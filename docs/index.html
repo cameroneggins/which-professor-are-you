@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Which Professor Are You?</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1 id="title">Which Professor Are You?</h1>
+    <p id="desc">Answer a few fun questions and we'll match you to a professor.</p>
+
+    <div id="quiz" class="card">
+      <div id="progress" class="progress">0 / 0</div>
+      <div id="question" class="question"></div>
+      <div id="choices" class="choices"></div>
+      <div id="text-input" class="text-input" style="display:none;">
+        <textarea id="free-text" rows="3" placeholder="Your answer..."></textarea>
+        <button id="free-submit" class="btn">Submit</button>
+      </div>
+    </div>
+
+    <div id="result" class="card" style="display:none;">
+      <h2 id="result-title"></h2>
+      <p id="result-desc"></p>
+      <button id="restart" class="btn">Take it again</button>
+    </div>
+  </main>
+
+  <script src="quiz.js"></script>
+</body>
+</html>
