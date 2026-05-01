@@ -50,8 +50,13 @@ QUIZ: Dict[str, Any] = {
 		},
 		{
 			"text": "What is your Roman Empire?  (pull solutions from professors’ answers)",
-			"type": "text",
-			"scoring": False,
+			"type": "choice",
+			"choices": [
+				{"text": "Right now, at any time", "maps_to": "Matt Emerton"},
+				{"text": "Within a day or two", "maps_to": "Benson Farb"},
+				{"text": "I have literally never responded to an email?", "maps_to": "Ewain Gwynne"},
+				{"text": "When pressed", "maps_to": "Alex Eskin"},
+			],
 		},
 		{
 			"text": "How many pullups can you do?",
