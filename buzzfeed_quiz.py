@@ -13,119 +13,28 @@ adapt it for a web frontend or GitHub Pages later.
 """
 from __future__ import annotations
 import argparse
+import json
 import random
+from pathlib import Path
 from typing import List, Dict, Any, Optional
 
 
-QUIZ: Dict[str, Any] = {
-	"title": "Which Professor Are You?",
-	"description": "Answer a few fun questions and we'll match you to a professor.",
-	"results": {
-		"Benson Farb": "Calm, scholarly, and quietly brilliant.",
-		"Matt Emerton": "Energetic, rigorous, and fond of exercise.",
-		"Ewain Gwynne": "Laid-back, mysterious, and occasionally absent.",
-		"Alex Eskin": "Curious, practical, and engaged with students.",
-		"Amy Wilkinson": "Polished, organized, and people-minded.",
-	},
-	"questions": [
-		{
-			"text": "Are you politically correct?",
-			"type": "choice",
-			"choices": [
-				{"text": "Always", "maps_to": "Amy Wilkinson"},
-				{"text": "Mostly", "maps_to": "Benson Farb"},
-				{"text": "Occasionally", "maps_to": "Alex Eskin"},
-				{"text": "Never", "maps_to": "Matt Emerton"},
-			],
-		},
-		{
-			"text": "Do you prefer to respond to emails:",
-			"type": "choice",
-			"choices": [
-				{"text": "Right now, at any time", "maps_to": "Matt Emerton"},
-				{"text": "Within a day or two", "maps_to": "Benson Farb"},
-				{"text": "I have literally never responded to an email?", "maps_to": "Ewain Gwynne"},
-				{"text": "When pressed", "maps_to": "Alex Eskin"},
-			],
-		},
-		{
-			"text": "What is your Roman Empire?  (pull solutions from professors’ answers)",
-			"type": "choice",
-			"choices": [
-				{"text": "Right now, at any time", "maps_to": "Matt Emerton"},
-				{"text": "Within a day or two", "maps_to": "Benson Farb"},
-				{"text": "I have literally never responded to an email?", "maps_to": "Ewain Gwynne"},
-				{"text": "When pressed", "maps_to": "Alex Eskin"},
-			],
-		},
-		{
-			"text": "How many pullups can you do?",
-			"type": "choice",
-			"choices": [
-				{"text": "0", "maps_to": "Ewain Gwynne"},
-				{"text": "0<x<4", "maps_to": "Benson Farb"},
-				{"text": "4<x<10", "maps_to": "Alex Eskin"},
-				{"text": "10<x", "maps_to": "Amy Wilkinson"},
-				{"text": "As many as Matt Emerton", "maps_to": "Matt Emerton"},
-			],
-		},
-		{
-			"text": "How often do you fall asleep during seminars or classes?",
-			"type": "choice",
-			"choices": [
-				{"text": "Literally every time", "maps_to": "Ewain Gwynne"},
-				{"text": "Whenever I am bored", "maps_to": "Alex Eskin"},
-				{"text": "Rarely", "maps_to": "Benson Farb"},
-				{"text": "Never", "maps_to": "Amy Wilkinson"},
-			],
-		},
-		{
-			"text": "Do you personally know any president?",
-			"type": "choice",
-			"choices": [
-				{"text": "Yes", "maps_to": "Matt Emerton"},
-				{"text": "No", "maps_to": "Benson Farb"},
-			],
-		},
-		{
-			"text": "How good is your handwriting?",
-			"type": "choice",
-			"choices": [
-				{"text": "Anyone can read it", "maps_to": "Benson Farb"},
-				{"text": "I can read it myself", "maps_to": "Matt Emerton"},
-				{"text": "It is a safe encoding tool", "maps_to": "Ewain Gwynne"},
-			],
-		},
-		{
-			"text": "Do you think or ask AI first?",
-			"type": "choice",
-			"choices": [
-				{"text": "Think", "maps_to": "Alex Eskin"},
-				{"text": "AI", "maps_to": "Amy Wilkinson"},
-			],
-		},
-		{
-			"text": "How often do you update your website?",
-			"type": "choice",
-			"choices": [
-				{"text": "Weekly", "maps_to": "Matt Emerton"},
-				{"text": "Monthly", "maps_to": "Alex Eskin"},
-				{"text": "Yearly", "maps_to": "Benson Farb"},
-				{"text": "Never", "maps_to": "Ewain Gwynne"},
-				{"text": "I will never make a website", "maps_to": "Amy Wilkinson"},
-			],
-		},
-		{
-			"text": "How long do you stay in your office?",
-			"type": "choice",
-			"choices": [
-				{"text": "Until 3pm", "maps_to": "Benson Farb"},
-				{"text": "Until 9pm", "maps_to": "Matt Emerton"},
-				{"text": "Never", "maps_to": "Ewain Gwynne"},
-			],
-		},
-	],
-}
+def _load_quiz_from_json() -> Dict[str, Any]:
+    candidates = [
+        Path(__file__).parent / "docs" / "quiz.json",
+        Path("docs") / "quiz.json",
+        Path("quiz.json"),
+    ]
+    for p in candidates:
+        if p.exists():
+            try:
+                return json.loads(p.read_text(encoding="utf-8"))
+            except Exception as e:
+                raise SystemExit(f"Failed to parse {p}: {e}")
+    raise SystemExit("Could not find a quiz JSON file. Please add docs/quiz.json")
+
+
+QUIZ: Dict[str, Any] = _load_quiz_from_json()
 
 
 def ask_choice(q: Dict[str, Any]) -> str:
