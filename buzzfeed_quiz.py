@@ -70,18 +70,55 @@ def run_quiz(auto: bool = False, demo_random: bool = False) -> None:
 
 	for q in QUIZ["questions"]:
 		if q.get("type") == "choice":
+			# validate/score choices: support new `points` per choice or legacy `maps_to`
 			if auto:
 				if demo_random:
-					choice = random.choice(q["choices"])["maps_to"]
+					choice_obj = random.choice(q["choices"])
 				else:
 					# deterministic: pick middle choice (or first if even)
 					idx = len(q["choices"]) // 2
-					choice = q["choices"][idx]["maps_to"]
-				print(f"Q: {q['text']} -> Auto-choice: {choice}")
+					choice_obj = q["choices"][idx]
+				# show what we picked
+				if "maps_to" in choice_obj:
+					choice_desc = choice_obj["maps_to"]
+				else:
+					choice_desc = choice_obj.get("text", "(choice)")
+				print(f"Q: {q['text']} -> Auto-choice: {choice_desc}")
 			else:
-				choice = ask_choice(q)
-			scores[choice] = scores.get(choice, 0) + 1
-			answer_order.append(choice)
+				# interactive: pick a choice index; return the chosen choice object
+				idx = None
+				while True:
+					print(q["text"])
+					for i, c in enumerate(q["choices"], start=1):
+						print(f"  {i}. {c.get('text','(choice)')}")
+					val = input(f"Choose 1-{len(q['choices'])}: ").strip()
+					if not val or not val.isdigit():
+						print("Please enter a number.")
+						continue
+					idx = int(val)
+					if 1 <= idx <= len(q["choices"]):
+						choice_obj = q["choices"][idx-1]
+						break
+					print("Out of range; try again.")
+
+			# apply scoring
+			if "points" in choice_obj:
+				# validate sum == 10
+				sumv = sum(float(v) for v in choice_obj["points"].values())
+				if abs(sumv - 10.0) > 1e-6:
+					raise SystemExit(f"Configuration error: points for choice '{choice_obj.get('text')}' sum to {sumv} (expected 10)")
+				for prof, val in choice_obj["points"].items():
+					scores[prof] = scores.get(prof, 0) + int(val)
+				# record order by highest points in this choice for tie-breaking
+				best = max(choice_obj["points"].items(), key=lambda kv: kv[1])[0]
+				answer_order.append(best)
+			elif "maps_to" in choice_obj:
+				# legacy behavior: give full 10 points to the mapped professor
+				choice = choice_obj["maps_to"]
+				scores[choice] = scores.get(choice, 0) + 10
+				answer_order.append(choice)
+			else:
+				print("Choice has no scoring info; skipping.")
 		elif q.get("type") == "text":
 			if auto:
 				sample = "(auto-demo answer)"

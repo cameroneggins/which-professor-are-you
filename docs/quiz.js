@@ -44,8 +44,21 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if(q.type === 'choice'){
       q.choices.forEach((c, i)=>{
         const btn = renderChoice(c.text, i, ()=>{
-          scores[c.maps_to] = (scores[c.maps_to]||0)+1;
-          answerOrder.push(c.maps_to);
+          // scoring: support new `points` map OR legacy `maps_to`
+          if(c.points){
+            for(const prof in c.points){
+              scores[prof] = (scores[prof]||0) + Number(c.points[prof] || 0);
+            }
+            // record order by highest-scored prof for this choice
+            const top = Object.keys(c.points).reduce((a,b)=> c.points[a]>=c.points[b]?a:b);
+            answerOrder.push(top);
+          } else if(c.maps_to){
+            scores[c.maps_to] = (scores[c.maps_to]||0)+10;
+            answerOrder.push(c.maps_to);
+          } else {
+            // unknown format
+            console.error('Choice has no scoring information:', c);
+          }
           index++;
           if(index<total) showQuestion(); else showResult();
         });
@@ -72,4 +85,26 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
 
   showQuestion();
+});
+
+// validation: ensure any `points` distributions sum to 10
+window.addEventListener('load', ()=>{
+  try{
+    data.questions.forEach((q, qi)=>{
+      if(q.type !== 'choice') return;
+      q.choices.forEach((c, ci)=>{
+        if(c.points){
+          const vals = Object.values(c.points).map(v=>Number(v || 0));
+          const sum = vals.reduce((a,b)=>a+b, 0);
+          if(Math.abs(sum - 10) > 1e-6){
+            // show user-friendly error on the page and prevent quiz run
+            qs('#quiz').innerHTML = `<p style="color:darkred">Configuration error: points for choice "${c.text}" (question ${qi+1}) sum to ${sum} but must equal 10.</p>`;
+            throw new Error(`Points sum to ${sum} (expected 10) for choice ${c.text}`);
+          }
+        }
+      });
+    });
+  }catch(e){
+    console.error(e);
+  }
 });
