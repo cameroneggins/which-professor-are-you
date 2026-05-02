@@ -13,13 +13,29 @@ function renderChoice(text, idx, onClick){
   return btn;
 }
 
-function renderImage(src, alt){
+function renderImage(src, alt, label){
   if(!src) return null;
+  const wrap = document.createElement('div');
+  wrap.className = 'media-wrap';
+
   const img = document.createElement('img');
   img.src = src;
   img.alt = alt || '';
   img.loading = 'lazy';
-  return img;
+
+  const message = document.createElement('div');
+  message.className = 'media-error';
+  message.style.display = 'none';
+  message.textContent = `${label || 'Image'} failed to load: ${src}`;
+
+  img.addEventListener('error', ()=>{
+    img.style.display = 'none';
+    message.style.display = '';
+  });
+
+  wrap.appendChild(img);
+  wrap.appendChild(message);
+  return wrap;
 }
 
 function getResultInfo(data, winner){
@@ -76,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     const questionMedia = qs('#question-media');
     questionMedia.innerHTML = '';
     if(q.image){
-      const img = renderImage(q.image, q.text);
+      const img = renderImage(q.image, q.text, 'Question image');
       if(img) questionMedia.appendChild(img);
     }
     qs('#choices').innerHTML = '';
@@ -126,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     const resultMedia = qs('#result-media');
     resultMedia.innerHTML = '';
     if(resultInfo.image){
-      const img = renderImage(resultInfo.image, winner);
+      const img = renderImage(resultInfo.image, winner, 'Result image');
       if(img) resultMedia.appendChild(img);
     }
     qs('#restart').onclick = ()=>{ index=0; for(const k in scores) scores[k]=0; answerOrder.length=0; for(const k in freeText) delete freeText[k]; qs('#result').style.display='none'; qs('#quiz').style.display=''; showQuestion(); }
