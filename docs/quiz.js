@@ -29,6 +29,11 @@ function getResultInfo(data, winner){
   return { description: '', image: '' };
 }
 
+function normalizeText(value){
+  if(value == null) return '';
+  return typeof value === 'string' ? value : String(value);
+}
+
 function validateQuizData(data){
   data.questions.forEach((q, qi)=>{
     if(q.type !== 'choice') return;
@@ -117,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     qs('#result').style.display = '';
     qs('#result-title').textContent = `You are: ${winner}`;
     const resultInfo = getResultInfo(data, winner);
-    qs('#result-desc').textContent = resultInfo.description || '';
+    qs('#result-desc').textContent = normalizeText(resultInfo.description);
     const resultMedia = qs('#result-media');
     resultMedia.innerHTML = '';
     if(resultInfo.image){

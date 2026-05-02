@@ -4,49 +4,49 @@
   "results": {
     "Benson Farb": {
       "description": "Careful, concise, and quietly formidable.",
-      "image": "../pictures/profs/benson.png"
+      "image": "pictures/profs/benson.png"
     },
     "Matthew Emerton": {
       "description": "Energetic, direct, and relentlessly driven.",
-      "image": "../pictures/profs/matt.png"
+      "image": "pictures/profs/matt.png"
     },
     "Bảo Châu Ngô": {
       "description": "Elegant, deep, and full of insight.",
-      "image": "../pictures/profs/ngo.png"
+      "image": "pictures/profs/ngo.png"
     },
     "Amie Wilkinson": {
       "description": "Warm, organized, and mathematically sharp.",
-      "image": "../pictures/profs/amie.png"
+      "image": "pictures/profs/amie.png"
     },
     "Peter May": {
       "description": "Structural, foundational, and steady.",
-      "image": "../pictures/profs/peter.jpg"
+      "image": "pictures/profs/peter.jpg"
     },
     "Yu Deng": {
       "description": "Fast-moving, analytical, and focused.",
-      "image": "../pictures/profs/yu.png"
+      "image": "pictures/profs/yu.png"
     },
     "Marianna Csörnyei": {
       "description": "Precise, versatile, and delightfully exact.",
-      "image": "../pictures/profs/marianna.png"
+      "image": "pictures/profs/marianna.png"
     },
     "Danny Calegary": {
       "description": "Geometric, lively, and imaginative.",
-      "image": "../pictures/profs/danny.png"
+      "image": "pictures/profs/danny.png"
     },
     "Kazuya Kato": {
       "description": "Patient, abstract, and deeply thoughtful.",
-      "image": "../pictures/profs/kato.png"
+      "image": "pictures/profs/kato.png"
     },
     "Victor Ginzburg": {
       "description": "Sophisticated, expressive, and conceptually bold.",
-      "image": "../pictures/profs/victor.png"
+      "image": "pictures/profs/victor.png"
     }
   },
   "questions": [
     {
       "text": "Are you politically correct?",
-      "image": "../pictures/questions/politically_correct.png",
+      "image": "pictures/questions/politically_correct.png",
       "type": "choice",
       "choices": [
         {
