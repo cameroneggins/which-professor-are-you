@@ -13,6 +13,35 @@ function renderChoice(text, idx, onClick){
   return btn;
 }
 
+function renderImage(src, alt){
+  if(!src) return null;
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = alt || '';
+  img.loading = 'lazy';
+  return img;
+}
+
+function getResultInfo(data, winner){
+  const raw = data.results[winner];
+  if(typeof raw === 'string') return { description: raw, image: '' };
+  if(raw && typeof raw === 'object') return raw;
+  return { description: '', image: '' };
+}
+
+function validateQuizData(data){
+  data.questions.forEach((q, qi)=>{
+    if(q.type !== 'choice') return;
+    q.choices.forEach((c)=>{
+      if(!c.points) return;
+      const sum = Object.values(c.points).map(v=>Number(v || 0)).reduce((a,b)=>a+b, 0);
+      if(Math.abs(sum - 10) > 1e-6){
+        throw new Error(`Points sum to ${sum} (expected 10) for choice ${c.text} in question ${qi + 1}`);
+      }
+    });
+  });
+}
+
 function computeWinner(scores, order){
   let max = -1;
   for(const k in scores) if(scores[k] > max) max = scores[k];
@@ -24,6 +53,7 @@ function computeWinner(scores, order){
 
 document.addEventListener('DOMContentLoaded', async ()=>{
   const data = await loadQuiz();
+  validateQuizData(data);
   qs('#title').textContent = data.title;
   qs('#desc').textContent = data.description;
 
@@ -38,6 +68,12 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     const q = data.questions[index];
     qs('#progress').textContent = `${index+1} / ${total}`;
     qs('#question').textContent = q.text;
+    const questionMedia = qs('#question-media');
+    questionMedia.innerHTML = '';
+    if(q.image){
+      const img = renderImage(q.image, q.text);
+      if(img) questionMedia.appendChild(img);
+    }
     qs('#choices').innerHTML = '';
     qs('#text-input').style.display = 'none';
 
@@ -80,31 +116,16 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     qs('#quiz').style.display = 'none';
     qs('#result').style.display = '';
     qs('#result-title').textContent = `You are: ${winner}`;
-    qs('#result-desc').textContent = data.results[winner] || '';
+    const resultInfo = getResultInfo(data, winner);
+    qs('#result-desc').textContent = resultInfo.description || '';
+    const resultMedia = qs('#result-media');
+    resultMedia.innerHTML = '';
+    if(resultInfo.image){
+      const img = renderImage(resultInfo.image, winner);
+      if(img) resultMedia.appendChild(img);
+    }
     qs('#restart').onclick = ()=>{ index=0; for(const k in scores) scores[k]=0; answerOrder.length=0; for(const k in freeText) delete freeText[k]; qs('#result').style.display='none'; qs('#quiz').style.display=''; showQuestion(); }
   }
 
   showQuestion();
-});
-
-// validation: ensure any `points` distributions sum to 10
-window.addEventListener('load', ()=>{
-  try{
-    data.questions.forEach((q, qi)=>{
-      if(q.type !== 'choice') return;
-      q.choices.forEach((c, ci)=>{
-        if(c.points){
-          const vals = Object.values(c.points).map(v=>Number(v || 0));
-          const sum = vals.reduce((a,b)=>a+b, 0);
-          if(Math.abs(sum - 10) > 1e-6){
-            // show user-friendly error on the page and prevent quiz run
-            qs('#quiz').innerHTML = `<p style="color:darkred">Configuration error: points for choice "${c.text}" (question ${qi+1}) sum to ${sum} but must equal 10.</p>`;
-            throw new Error(`Points sum to ${sum} (expected 10) for choice ${c.text}`);
-          }
-        }
-      });
-    });
-  }catch(e){
-    console.error(e);
-  }
 });

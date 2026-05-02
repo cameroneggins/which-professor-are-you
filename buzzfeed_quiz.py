@@ -61,6 +61,12 @@ def ask_text(q: Dict[str, Any]) -> str:
 	return input("Your answer: ").strip()
 
 
+def result_description(result: Any) -> str:
+	if isinstance(result, dict):
+		return str(result.get("description", ""))
+	return str(result)
+
+
 def run_quiz(auto: bool = False, demo_random: bool = False) -> None:
 	print("\n", QUIZ["title"], "\n", QUIZ["description"], "\n")
 
@@ -148,7 +154,7 @@ def run_quiz(auto: bool = False, demo_random: bool = False) -> None:
 
 	print("\n--- RESULT ---")
 	print(f"You are: {winner}")
-	print(QUIZ["results"].get(winner, ""))
+	print(result_description(QUIZ["results"].get(winner, "")))
 
 	if free_text_answers:
 		print("\nYour text answers:")
