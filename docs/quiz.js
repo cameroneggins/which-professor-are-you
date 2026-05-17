@@ -1,5 +1,8 @@
 async function loadQuiz(){
   const res = await fetch('quiz.json');
+  if(!res.ok){
+    throw new Error(`Failed to load quiz.json (${res.status})`);
+  }
   return res.json();
 }
 
@@ -50,17 +53,59 @@ function normalizeText(value){
   return typeof value === 'string' ? value : String(value);
 }
 
+function showFatalError(message){
+  qs('#progress').textContent = '0 / 0';
+  qs('#question').textContent = message;
+  qs('#choices').innerHTML = '';
+  qs('#question-media').innerHTML = '';
+  qs('#text-input').style.display = 'none';
+}
+
+function renderWarnings(warnings){
+  if(!warnings || !warnings.length) return;
+  const container = qs('#data-warnings');
+  if(!container) return;
+  container.innerHTML = '';
+  const title = document.createElement('h3');
+  title.textContent = 'Quiz data warnings';
+  const list = document.createElement('ul');
+  warnings.forEach((msg)=>{
+    const item = document.createElement('li');
+    item.textContent = msg;
+    list.appendChild(item);
+  });
+  container.appendChild(title);
+  container.appendChild(list);
+  container.style.display = '';
+}
+
 function validateQuizData(data){
+  if(!data || !Array.isArray(data.questions)){
+    console.warn('Quiz data is missing a questions array.');
+    return ['Quiz data is missing a questions array.'];
+  }
+
+  const warnings = [];
   data.questions.forEach((q, qi)=>{
     if(q.type !== 'choice') return;
     q.choices.forEach((c)=>{
       if(!c.points) return;
       const sum = Object.values(c.points).map(v=>Number(v || 0)).reduce((a,b)=>a+b, 0);
+      if(!Number.isFinite(sum)){
+        warnings.push(`Non-numeric points for choice ${c.text} in question ${qi + 1}`);
+        return;
+      }
       if(Math.abs(sum - 10) > 1e-6){
-        throw new Error(`Points sum to ${sum} (expected 10) for choice ${c.text} in question ${qi + 1}`);
+        warnings.push(`Points sum to ${sum} (expected 10) for choice ${c.text} in question ${qi + 1}`);
       }
     });
   });
+
+  if(warnings.length){
+    console.warn('Quiz data warnings:', warnings);
+  }
+
+  return warnings;
 }
 
 function computeWinner(scores, order){
@@ -73,8 +118,16 @@ function computeWinner(scores, order){
 }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const data = await loadQuiz();
-  validateQuizData(data);
+  let data;
+  try{
+    data = await loadQuiz();
+  }catch(err){
+    console.error(err);
+    showFatalError('Failed to load quiz data.');
+    return;
+  }
+  const warnings = validateQuizData(data);
+  renderWarnings(warnings);
   qs('#title').textContent = data.title;
   qs('#desc').textContent = data.description;
 
