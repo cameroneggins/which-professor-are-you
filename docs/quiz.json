@@ -3,47 +3,47 @@
   "description": "Answer a few fun questions and we'll match you to a professor.",
   "results": {
     "Benson Farb": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/benson.png"
     },
     "Matthew Emerton": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/matt.png"
     },
     "Bảo Châu Ngô": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/ngo.png"
     },
     "Amie Wilkinson": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/amie.png"
     },
     "André Neves": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/andre.png"
     },
     "Peter May": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/peter.jpg"
     },
     "Yu Deng": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/yu.png"
     },
     "Marianna Csörnyei": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/marianna.png"
     },
     "Danny Calegari": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/danny.png"
     },
     "Kazuya Kato": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/kato.png"
     },
     "Victor Ginzburg": {
-      "description": "Placeholder",
+      "description": "",
       "image": "pictures/profs/victor.png"
     }
   },
@@ -471,6 +471,7 @@
     },
     {
       "text": "Do you personally know any president?",
+      "image": "pictures/questions/president.png",
       "type": "choice",
       "choices": [
         {
