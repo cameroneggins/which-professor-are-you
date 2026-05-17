@@ -1,5 +1,5 @@
 async function loadQuiz(){
-  const res = await fetch('quiz.json');
+  const res = await fetch('quiz.json', { cache: 'no-store' });
   if(!res.ok){
     throw new Error(`Failed to load quiz.json (${res.status})`);
   }
