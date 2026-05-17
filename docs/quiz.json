@@ -516,6 +516,7 @@
     {
       "text": "How good is your handwriting?",
       "type": "choice",
+      "image": "pictures/questions/handwriting.jpg",
       "choices": [
         {
           "text": "Anyone can read it",
@@ -570,6 +571,7 @@
     {
       "text": "Do you think or ask AI first?",
       "type": "choice",
+      "image": "pictures/questions/ai.jpg",
       "choices": [
         {
           "text": "Think",
@@ -608,6 +610,7 @@
     {
       "text": "How often do you update your website?",
       "type": "choice",
+      "image": "pictures/questions/website.png",
       "choices": [
         {
           "text": "Monthly",
@@ -662,6 +665,7 @@
     {
       "text": "What is your least favorite area of math?",
       "type": "choice",
+      "image": "pictures/questions/least.jpg",
       "choices": [
         {
           "text": "Analysis",
