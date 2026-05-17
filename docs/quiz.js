@@ -191,9 +191,72 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   for(const k of Object.keys(data.results)) scores[k]=0;
   const answerOrder = [];
   const freeText = {};
+  const history = [];
+  const backButton = qs('#back');
+
+  function updateBackButton(){
+    if(!backButton) return;
+    backButton.disabled = history.length === 0 || index === 0;
+  }
+
+  function applyChoice(choice){
+    const delta = {};
+    let orderProf = null;
+
+    if(choice.points){
+      for(const prof in choice.points){
+        const val = Number(choice.points[prof] || 0);
+        delta[prof] = val;
+        scores[prof] = (scores[prof]||0) + val;
+      }
+      const profs = Object.keys(choice.points);
+      if(profs.length){
+        orderProf = profs.reduce((a,b)=> choice.points[a]>=choice.points[b]?a:b);
+        answerOrder.push(orderProf);
+      }
+    } else if(choice.maps_to){
+      const prof = choice.maps_to;
+      if(prof){
+        delta[prof] = 10;
+        scores[prof] = (scores[prof]||0) + 10;
+        orderProf = prof;
+        answerOrder.push(orderProf);
+      }
+    } else {
+      // unknown format
+      console.error('Choice has no scoring information:', choice);
+    }
+
+    return { delta, orderProf };
+  }
+
+  function undoLast(){
+    if(history.length === 0) return;
+    const last = history.pop();
+    index = Math.max(0, index - 1);
+
+    if(last.type === 'choice'){
+      for(const [prof, val] of Object.entries(last.delta || {})){
+        scores[prof] = (scores[prof] || 0) - val;
+      }
+      if(last.orderProf){
+        answerOrder.pop();
+      }
+    }
+
+    showQuestion();
+  }
+
+  if(backButton){
+    backButton.addEventListener('click', ()=>{
+      if(index === 0) return;
+      undoLast();
+    });
+  }
 
   function showQuestion(){
     const q = data.questions[index];
+    updateBackButton();
     qs('#progress').textContent = `${index+1} / ${total}`;
     qs('#question').textContent = q.text;
     const questionMedia = qs('#question-media');
@@ -208,21 +271,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if(q.type === 'choice'){
       q.choices.forEach((c, i)=>{
         const btn = renderChoice(c.text, i, ()=>{
-          // scoring: support new `points` map OR legacy `maps_to`
-          if(c.points){
-            for(const prof in c.points){
-              scores[prof] = (scores[prof]||0) + Number(c.points[prof] || 0);
-            }
-            // record order by highest-scored prof for this choice
-            const top = Object.keys(c.points).reduce((a,b)=> c.points[a]>=c.points[b]?a:b);
-            answerOrder.push(top);
-          } else if(c.maps_to){
-            scores[c.maps_to] = (scores[c.maps_to]||0)+10;
-            answerOrder.push(c.maps_to);
-          } else {
-            // unknown format
-            console.error('Choice has no scoring information:', c);
-          }
+          const result = applyChoice(c);
+          history.push({ type: 'choice', delta: result.delta, orderProf: result.orderProf });
           index++;
           if(index<total) showQuestion(); else showResult();
         });
@@ -230,9 +280,10 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       });
     } else if(q.type === 'text'){
       qs('#text-input').style.display = '';
-      qs('#free-text').value = '';
+      qs('#free-text').value = freeText[q.text] || '';
       qs('#free-submit').onclick = ()=>{
         freeText[q.text] = qs('#free-text').value.trim() || '(no answer)';
+        history.push({ type: 'text', key: q.text });
         index++;
         if(index<total) showQuestion(); else showResult();
       }

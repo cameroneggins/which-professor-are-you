@@ -138,6 +138,7 @@
     {
       "text": "Do you prefer to respond to emails:",
       "type": "choice",
+      "image": "pictures/questions/email.png",
       "choices": [
         {
           "text": "Right now, at any time",
@@ -192,6 +193,7 @@
     {
       "text": "What is your Roman Empire?",
       "type": "choice",
+      "image": "pictures/questions/roman.png",
       "choices": [
         {
           "text": "The Roman Empire",
@@ -278,6 +280,7 @@
     {
       "text": "How many pullups can you do?",
       "type": "choice",
+      "image": "pictures/questions/pullup.png",
       "choices": [
         {
           "text": "0",
@@ -348,6 +351,7 @@
     {
       "text": "When do you arrive to seminars?",
       "type": "choice",
+      "image": "pictures/questions/seminar.jpg",
       "choices": [
         {
           "text": "10 minutes early",
@@ -418,6 +422,7 @@
     {
       "text": "How often do you fall asleep during seminars or classes?",
       "type": "choice",
+      "image": "pictures/questions/asleep.jpg",
       "choices": [
         {
           "text": "Literally every time",
