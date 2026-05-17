@@ -61,6 +61,43 @@ function showFatalError(message){
   qs('#text-input').style.display = 'none';
 }
 
+function collectProfessors(data){
+  const professors = [];
+  const seen = new Set();
+
+  if(data && data.results && typeof data.results === 'object'){
+    Object.keys(data.results).forEach((prof)=>{
+      if(!seen.has(prof)){
+        seen.add(prof);
+        professors.push(prof);
+      }
+    });
+  }
+
+  if(data && Array.isArray(data.questions)){
+    data.questions.forEach((q)=>{
+      (q.choices || []).forEach((c)=>{
+        if(c.points && typeof c.points === 'object'){
+          Object.keys(c.points).forEach((prof)=>{
+            if(!seen.has(prof)){
+              seen.add(prof);
+              professors.push(prof);
+            }
+          });
+        } else if(c.maps_to){
+          const prof = c.maps_to;
+          if(prof && !seen.has(prof)){
+            seen.add(prof);
+            professors.push(prof);
+          }
+        }
+      });
+    });
+  }
+
+  return professors;
+}
+
 function renderWarnings(warnings){
   if(!warnings || !warnings.length) return;
   const container = qs('#data-warnings');
@@ -86,17 +123,34 @@ function validateQuizData(data){
   }
 
   const warnings = [];
+  const professors = collectProfessors(data);
+
   data.questions.forEach((q, qi)=>{
     if(q.type !== 'choice') return;
-    q.choices.forEach((c)=>{
-      if(!c.points) return;
-      const sum = Object.values(c.points).map(v=>Number(v || 0)).reduce((a,b)=>a+b, 0);
-      if(!Number.isFinite(sum)){
-        warnings.push(`Non-numeric points for choice ${c.text} in question ${qi + 1}`);
-        return;
+    const totals = {};
+    professors.forEach((prof)=>{ totals[prof] = 0; });
+
+    (q.choices || []).forEach((c)=>{
+      if(c.points && typeof c.points === 'object'){
+        Object.entries(c.points).forEach(([prof, raw])=>{
+          const val = Number(raw ?? 0);
+          if(!Number.isFinite(val)){
+            warnings.push(`Non-numeric points for ${prof} in '${c.text}' (question ${qi + 1})`);
+            return;
+          }
+          if(!(prof in totals)) totals[prof] = 0;
+          totals[prof] += val;
+        });
+      } else if(c.maps_to){
+        const prof = c.maps_to;
+        if(!(prof in totals)) totals[prof] = 0;
+        totals[prof] += 10;
       }
-      if(Math.abs(sum - 10) > 1e-6){
-        warnings.push(`Points sum to ${sum} (expected 10) for choice ${c.text} in question ${qi + 1}`);
+    });
+
+    Object.entries(totals).forEach(([prof, total])=>{
+      if(Math.abs(total - 10) > 1e-6){
+        warnings.push(`Question ${qi + 1}: total for ${prof} is ${total} (expected 10)`);
       }
     });
   });

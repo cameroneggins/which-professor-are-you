@@ -37,6 +37,56 @@ def _load_quiz_from_json() -> Dict[str, Any]:
 QUIZ: Dict[str, Any] = _load_quiz_from_json()
 
 
+def _collect_professors(quiz: Dict[str, Any]) -> List[str]:
+	found: List[str] = list(quiz.get("results", {}).keys())
+	seen = set(found)
+	for q in quiz.get("questions", []):
+		for choice in q.get("choices", []):
+			points = choice.get("points")
+			if isinstance(points, dict):
+				for prof in points.keys():
+					if prof not in seen:
+						seen.add(prof)
+						found.append(prof)
+			else:
+				prof = choice.get("maps_to")
+				if prof and prof not in seen:
+					seen.add(prof)
+					found.append(prof)
+	return found
+
+
+def _validate_question_totals(q: Dict[str, Any], professors: List[str], q_index: int) -> None:
+	if q.get("type") != "choice":
+		return
+	totals = {prof: 0.0 for prof in professors}
+	for choice in q.get("choices", []):
+		points = choice.get("points")
+		if isinstance(points, dict):
+			for prof, raw in points.items():
+				try:
+					val = float(raw or 0)
+				except (TypeError, ValueError):
+					raise SystemExit(
+						f"Configuration error: non-numeric points for {prof} in question {q_index}"
+					)
+				if prof not in totals:
+					totals[prof] = 0.0
+				totals[prof] += val
+		elif "maps_to" in choice:
+			prof = choice.get("maps_to")
+			if prof:
+				if prof not in totals:
+					totals[prof] = 0.0
+				totals[prof] += 10.0
+
+	for prof, total in totals.items():
+		if abs(total - 10.0) > 1e-6:
+			raise SystemExit(
+				f"Configuration error: totals for {prof} in question {q_index} sum to {total} (expected 10)"
+			)
+
+
 def ask_choice(q: Dict[str, Any]) -> str:
 	choices = q["choices"]
 	print(q["text"])
@@ -69,6 +119,10 @@ def result_description(result: Any) -> str:
 
 def run_quiz(auto: bool = False, demo_random: bool = False) -> None:
 	print("\n", QUIZ["title"], "\n", QUIZ["description"], "\n")
+
+	professors = _collect_professors(QUIZ)
+	for qi, q in enumerate(QUIZ["questions"], start=1):
+		_validate_question_totals(q, professors, qi)
 
 	scores: Dict[str, int] = {name: 0 for name in QUIZ["results"].keys()}
 	answer_order: List[str] = []
@@ -109,10 +163,6 @@ def run_quiz(auto: bool = False, demo_random: bool = False) -> None:
 
 			# apply scoring
 			if "points" in choice_obj:
-				# validate sum == 10
-				sumv = sum(float(v) for v in choice_obj["points"].values())
-				if abs(sumv - 10.0) > 1e-6:
-					raise SystemExit(f"Configuration error: points for choice '{choice_obj.get('text')}' sum to {sumv} (expected 10)")
 				for prof, val in choice_obj["points"].items():
 					scores[prof] = scores.get(prof, 0) + int(val)
 				# record order by highest points in this choice for tie-breaking
