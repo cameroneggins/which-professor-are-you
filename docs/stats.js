@@ -8,7 +8,14 @@ async function loadQuiz(){
 
 function qs(sel){return document.querySelector(sel)}
 
-function getCentralDateKey(resetHour){
+function formatDateKey(dateObj){
+  const year = dateObj.getUTCFullYear();
+  const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getCentralWindow(resetHour){
   const cutoff = Number.isFinite(resetHour) ? resetHour : 16;
   const now = new Date();
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -25,22 +32,24 @@ function getCentralDateKey(resetHour){
     if(part.type !== 'literal') map[part.type] = part.value;
   });
 
-  let year = Number(map.year);
-  let month = Number(map.month);
-  let day = Number(map.day);
+  const year = Number(map.year);
+  const month = Number(map.month);
+  const day = Number(map.day);
   const hour = Number(map.hour);
 
+  const start = new Date(Date.UTC(year, month - 1, day));
   if(Number.isFinite(hour) && hour < cutoff){
-    const temp = new Date(Date.UTC(year, month - 1, day));
-    temp.setUTCDate(temp.getUTCDate() - 1);
-    year = temp.getUTCFullYear();
-    month = temp.getUTCMonth() + 1;
-    day = temp.getUTCDate();
+    start.setUTCDate(start.getUTCDate() - 1);
   }
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 1);
 
-  const mm = String(month).padStart(2, '0');
-  const dd = String(day).padStart(2, '0');
-  return `${year}-${mm}-${dd}`;
+  const startKey = formatDateKey(start);
+  const endKey = formatDateKey(end);
+  return {
+    key: startKey,
+    label: `${startKey} 4pm CT -> ${endKey} 3:59pm CT`
+  };
 }
 
 function ensureOrder(list, first, second){
@@ -183,9 +192,8 @@ async function loadDailyCounts(client, dateKey, counts){
 }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const dateKey = getCentralDateKey(16);
-  const dateEl = qs('#stats-date');
-  if(dateEl) dateEl.textContent = `${dateKey} CT`;
+  const windowInfo = getCentralWindow(16);
+  const dateKey = windowInfo.key;
 
   let data;
   try{

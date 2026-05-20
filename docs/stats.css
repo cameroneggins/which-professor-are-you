@@ -121,6 +121,9 @@ h1 {
   color: #9a3412;
   min-width: 120px;
   text-align: center;
+  white-space: normal;
+  line-height: 1.2;
+  max-width: 260px;
 }
 
 .hero-card {
