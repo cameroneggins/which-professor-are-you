@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz Results - Which Professor Are You?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="stats.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Live tally</p>
+        <h1>Today in the quiz</h1>
+        <p class="sub">Counts update as people finish the quiz.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="index.html">Take the quiz</a>
+          <div id="stats-date" class="date-pill"></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-title">Live updates</div>
+        <div class="hero-card-body">
+          <span class="live-dot"></span>
+          <span id="chart-status">Connecting...</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="card stats-card">
+      <div class="card-head">
+        <h2>Results</h2>
+        <div class="legend">
+          <span class="legend-swatch"></span>
+          <span>Count per professor</span>
+        </div>
+      </div>
+      <div id="chart" class="chart-grid"></div>
+      <div id="chart-empty" class="chart-empty" style="display:none;">No responses yet today.</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="stats.js?v=1"></script>
+</body>
+</html>

@@ -65,6 +65,24 @@ p {
   font-size: 1.05rem;
 }
 
+.stats-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #ecfdf3;
+  color: #0f766e;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #99f6e4;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.18);
+}
+
 .warning {
   margin: 0 0 18px;
   padding: 14px 16px;

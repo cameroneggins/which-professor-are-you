@@ -1,0 +1,332 @@
+:root {
+  --bg-a: #f7f0e7;
+  --bg-b: #e0f2fe;
+  --ink: #0f172a;
+  --muted: #475569;
+  --card: #ffffff;
+  --accent: #0f766e;
+  --accent-bright: #22c55e;
+  --accent-warm: #f97316;
+  --border: #e2e8f0;
+  --shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top left, #fff7ed 0%, var(--bg-a) 35%, var(--bg-b) 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(0px);
+  z-index: -1;
+}
+
+body::before {
+  top: -80px;
+  right: -80px;
+  background: radial-gradient(circle, #fdba74 0%, transparent 65%);
+  animation: float 9s ease-in-out infinite;
+}
+
+body::after {
+  bottom: -120px;
+  left: -80px;
+  background: radial-gradient(circle, #86efac 0%, transparent 70%);
+  animation: float 11s ease-in-out infinite;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 70px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+
+h1 {
+  font-family: "Fraunces", serif;
+  font-size: clamp(2rem, 2vw + 1.8rem, 3rem);
+  margin: 0 0 12px;
+}
+
+.sub {
+  margin: 0 0 18px;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(15, 118, 110, 0.3);
+}
+
+.date-pill {
+  padding: 8px 14px;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #9a3412;
+  min-width: 120px;
+  text-align: center;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 70%);
+  color: #f8fafc;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-card-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.hero-card-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6);
+  animation: pulse 1.8s infinite;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.legend-swatch {
+  width: 18px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #93c5fd 0%, var(--accent) 100%);
+}
+
+.chart-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(120px, 1fr);
+  gap: 18px;
+  align-items: end;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.chart-bar {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.chart-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.35);
+}
+
+.chart-bar-fill {
+  width: 100%;
+  height: 6%;
+  background: linear-gradient(180deg, #93c5fd 0%, var(--accent) 100%);
+  transition: height 0.35s ease;
+}
+
+.chart-count {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.chart-photo {
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+}
+
+.chart-name {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.chart-empty {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.is-loaded .chart-item {
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: calc(var(--i) * 60ms);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(12px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(249, 115, 22, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 32px 16px 60px;
+  }
+
+  .chart-grid {
+    grid-auto-columns: minmax(100px, 1fr);
+  }
+
+  .chart-bar {
+    height: 170px;
+  }
+}
