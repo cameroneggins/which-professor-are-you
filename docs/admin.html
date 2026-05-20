@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Private Stats - Which Professor Are You?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Private tally</p>
+        <h1>Response percentages</h1>
+        <p class="sub">Hidden stats for the current 4pm CT window.</p>
+      </div>
+      <div class="meta">
+        <div id="response-count" class="meta-count">0 responses</div>
+        <div id="status" class="meta-status">Connecting...</div>
+      </div>
+    </header>
+
+    <section id="question-list" class="question-list"></section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="admin.js?v=1"></script>
+</body>
+</html>
