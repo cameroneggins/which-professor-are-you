@@ -8,10 +8,49 @@ async function loadQuiz(){
 
 function qs(sel){return document.querySelector(sel)}
 
-function getLocalDateKey(){
+function getCentralDateKey(resetHour){
+  const cutoff = Number.isFinite(resetHour) ? resetHour : 16;
   const now = new Date();
-  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
-  return local.toISOString().slice(0, 10);
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).formatToParts(now);
+  const map = {};
+  parts.forEach((part)=>{
+    if(part.type !== 'literal') map[part.type] = part.value;
+  });
+
+  let year = Number(map.year);
+  let month = Number(map.month);
+  let day = Number(map.day);
+  const hour = Number(map.hour);
+
+  if(Number.isFinite(hour) && hour < cutoff){
+    const temp = new Date(Date.UTC(year, month - 1, day));
+    temp.setUTCDate(temp.getUTCDate() - 1);
+    year = temp.getUTCFullYear();
+    month = temp.getUTCMonth() + 1;
+    day = temp.getUTCDate();
+  }
+
+  const mm = String(month).padStart(2, '0');
+  const dd = String(day).padStart(2, '0');
+  return `${year}-${mm}-${dd}`;
+}
+
+function ensureOrder(list, first, second){
+  const firstIndex = list.indexOf(first);
+  const secondIndex = list.indexOf(second);
+  if(firstIndex === -1 || secondIndex === -1) return;
+  if(firstIndex < secondIndex) return;
+  list.splice(firstIndex, 1);
+  const newSecondIndex = list.indexOf(second);
+  list.splice(newSecondIndex, 0, first);
 }
 
 function initSupabase(){
@@ -144,9 +183,9 @@ async function loadDailyCounts(client, dateKey, counts){
 }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
-  const dateKey = getLocalDateKey();
+  const dateKey = getCentralDateKey(16);
   const dateEl = qs('#stats-date');
-  if(dateEl) dateEl.textContent = dateKey;
+  if(dateEl) dateEl.textContent = `${dateKey} CT`;
 
   let data;
   try{
@@ -158,6 +197,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
 
   const professors = collectProfessors(data);
+  ensureOrder(professors, 'Bảo Châu Ngô', 'Matthew Emerton');
   if(!professors.length){
     setStatus('No professor data available.', true);
     return;

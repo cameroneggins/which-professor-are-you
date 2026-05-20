@@ -9,6 +9,9 @@
   --accent-warm: #f97316;
   --border: #e2e8f0;
   --shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+  --chart-bar-height: 190px;
+  --chart-photo-size: 68px;
+  --chart-name-height: 2.4em;
 }
 
 * {
@@ -195,16 +198,17 @@ h2 {
   grid-auto-flow: column;
   grid-auto-columns: minmax(120px, 1fr);
   gap: 18px;
-  align-items: end;
+  align-items: stretch;
   overflow-x: auto;
   padding-bottom: 12px;
 }
 
 .chart-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: var(--chart-bar-height) var(--chart-photo-size) var(--chart-name-height);
+  justify-items: center;
   gap: 10px;
+  height: 100%;
   opacity: 0;
   transform: translateY(8px);
 }
@@ -212,7 +216,7 @@ h2 {
 .chart-bar {
   position: relative;
   width: 100%;
-  height: 190px;
+  height: var(--chart-bar-height);
   border-radius: 16px;
   border: 2px solid var(--border);
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
@@ -252,8 +256,8 @@ h2 {
 }
 
 .chart-photo {
-  width: 68px;
-  height: 68px;
+  width: var(--chart-photo-size);
+  height: var(--chart-photo-size);
   border-radius: 16px;
   border: 2px solid var(--border);
   object-fit: cover;
@@ -266,6 +270,11 @@ h2 {
   font-weight: 600;
   color: #1e293b;
   line-height: 1.2;
+  height: var(--chart-name-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .chart-empty {
@@ -326,7 +335,8 @@ h2 {
     grid-auto-columns: minmax(100px, 1fr);
   }
 
-  .chart-bar {
-    height: 170px;
+  :root {
+    --chart-bar-height: 170px;
+    --chart-photo-size: 60px;
   }
 }
