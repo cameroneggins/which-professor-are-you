@@ -6,6 +6,12 @@ async function loadQuiz(){
   return res.json();
 }
 
+function getLocalDateKey(){
+  const now = new Date();
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+}
+
 function qs(sel){return document.querySelector(sel)}
 
 function renderChoice(text, idx, onClick){
@@ -116,6 +122,99 @@ function renderWarnings(warnings){
   container.style.display = '';
 }
 
+function initSupabase(){
+  const config = window.SUPABASE_CONFIG || {};
+  if(!window.supabase || !config.url || !config.anonKey) return null;
+  return window.supabase.createClient(config.url, config.anonKey);
+}
+
+function setChartStatus(message, isError){
+  const status = qs('#chart-status');
+  if(!status) return;
+  status.textContent = message || '';
+  status.style.color = isError ? '#b45309' : '';
+}
+
+function buildChart(professors, data){
+  const container = qs('#chart');
+  if(!container) return {};
+  container.innerHTML = '';
+  const elements = {};
+
+  professors.forEach((prof)=>{
+    const item = document.createElement('div');
+    item.className = 'chart-item';
+
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    const fill = document.createElement('div');
+    fill.className = 'chart-bar-fill';
+    const count = document.createElement('div');
+    count.className = 'chart-count';
+    count.textContent = '0';
+    bar.appendChild(fill);
+    bar.appendChild(count);
+
+    const photo = document.createElement('img');
+    photo.className = 'chart-photo';
+    const info = data.results && typeof data.results[prof] === 'object' ? data.results[prof] : null;
+    photo.src = info && info.image ? info.image : '';
+    photo.alt = prof;
+    photo.loading = 'lazy';
+    photo.addEventListener('error', ()=>{
+      photo.style.display = 'none';
+    });
+
+    const name = document.createElement('div');
+    name.className = 'chart-name';
+    name.textContent = prof;
+
+    item.appendChild(bar);
+    item.appendChild(photo);
+    item.appendChild(name);
+    container.appendChild(item);
+
+    elements[prof] = { fill, count };
+  });
+
+  return elements;
+}
+
+function updateChart(elements, counts){
+  const values = Object.values(counts);
+  const max = Math.max(1, ...values);
+  let total = 0;
+
+  Object.entries(elements).forEach(([prof, el])=>{
+    const count = counts[prof] || 0;
+    total += count;
+    el.count.textContent = String(count);
+    el.fill.style.height = `${Math.round((count / max) * 100)}%`;
+  });
+
+  const empty = qs('#chart-empty');
+  if(empty) empty.style.display = total === 0 ? '' : 'none';
+}
+
+async function loadDailyCounts(client, dateKey, counts){
+  const { data, error } = await client
+    .from('quiz_responses')
+    .select('id, winner')
+    .eq('quiz_date', dateKey);
+  if(error){
+    throw error;
+  }
+
+  data.forEach((row)=>{
+    if(row.winner in counts) counts[row.winner] += 1;
+  });
+  return data.map((row)=>row.id).filter(Boolean);
+}
+
+function buildAnswerPayload(answersByIndex){
+  return answersByIndex.filter(Boolean);
+}
+
 function validateQuizData(data){
   if(!data || !Array.isArray(data.questions)){
     console.warn('Quiz data is missing a questions array.');
@@ -185,6 +284,10 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   qs('#title').textContent = data.title;
   qs('#desc').textContent = data.description;
 
+  const dateKey = getLocalDateKey();
+  const dateEl = qs('#stats-date');
+  if(dateEl) dateEl.textContent = dateKey;
+
   const total = data.questions.length;
   let index = 0;
   const scores = {};
@@ -193,13 +296,25 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const freeText = {};
   const history = [];
   const backButton = qs('#back');
+  const answersByIndex = [];
+  const seenResponseIds = new Set();
+  const professors = collectProfessors(data);
+
+  const chartElements = buildChart(professors, data);
+  const chartCounts = {};
+  professors.forEach((prof)=>{ chartCounts[prof] = 0; });
+
+  const supabaseClient = initSupabase();
+  if(!supabaseClient){
+    setChartStatus('Stats are disabled until Supabase is configured.', false);
+  }
 
   function updateBackButton(){
     if(!backButton) return;
     backButton.disabled = history.length === 0 || index === 0;
   }
 
-  function applyChoice(choice){
+  function applyChoice(choice, questionIndex){
     const delta = {};
     let orderProf = null;
 
@@ -227,6 +342,15 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       console.error('Choice has no scoring information:', choice);
     }
 
+    answersByIndex[questionIndex] = {
+      question: data.questions[questionIndex].text,
+      type: 'choice',
+      choice: choice.text,
+      choiceIndex: (data.questions[questionIndex].choices || []).indexOf(choice),
+      points: choice.points || null,
+      maps_to: choice.maps_to || null
+    };
+
     return { delta, orderProf };
   }
 
@@ -234,6 +358,10 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if(history.length === 0) return;
     const last = history.pop();
     index = Math.max(0, index - 1);
+
+    if(typeof last.questionIndex === 'number'){
+      answersByIndex[last.questionIndex] = null;
+    }
 
     if(last.type === 'choice'){
       for(const [prof, val] of Object.entries(last.delta || {})){
@@ -271,8 +399,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     if(q.type === 'choice'){
       q.choices.forEach((c, i)=>{
         const btn = renderChoice(c.text, i, ()=>{
-          const result = applyChoice(c);
-          history.push({ type: 'choice', delta: result.delta, orderProf: result.orderProf });
+          const result = applyChoice(c, index);
+          history.push({ type: 'choice', delta: result.delta, orderProf: result.orderProf, questionIndex: index });
           index++;
           if(index<total) showQuestion(); else showResult();
         });
@@ -282,8 +410,10 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       qs('#text-input').style.display = '';
       qs('#free-text').value = freeText[q.text] || '';
       qs('#free-submit').onclick = ()=>{
-        freeText[q.text] = qs('#free-text').value.trim() || '(no answer)';
-        history.push({ type: 'text', key: q.text });
+        const answer = qs('#free-text').value.trim() || '(no answer)';
+        freeText[q.text] = answer;
+        answersByIndex[index] = { question: q.text, type: 'text', answer };
+        history.push({ type: 'text', key: q.text, questionIndex: index });
         index++;
         if(index<total) showQuestion(); else showResult();
       }
@@ -303,8 +433,73 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       const img = renderImage(resultInfo.image, winner, 'Result image');
       if(img) resultMedia.appendChild(img);
     }
-    qs('#restart').onclick = ()=>{ index=0; for(const k in scores) scores[k]=0; answerOrder.length=0; for(const k in freeText) delete freeText[k]; qs('#result').style.display='none'; qs('#quiz').style.display=''; showQuestion(); }
+    qs('#restart').onclick = ()=>{
+      index = 0;
+      for(const k in scores) scores[k] = 0;
+      answerOrder.length = 0;
+      history.length = 0;
+      answersByIndex.length = 0;
+      for(const k in freeText) delete freeText[k];
+      qs('#result').style.display = 'none';
+      qs('#quiz').style.display = '';
+      showQuestion();
+    };
+
+    if(supabaseClient){
+      const payload = {
+        quiz_date: dateKey,
+        winner,
+        answers: buildAnswerPayload(answersByIndex)
+      };
+      supabaseClient
+        .from('quiz_responses')
+        .insert(payload)
+        .select('id')
+        .then(({ data: rows, error })=>{
+          if(error){
+            setChartStatus(`Failed to record response: ${error.message}`, true);
+            return;
+          }
+          const insertedId = rows && rows[0] ? rows[0].id : null;
+          if(insertedId){
+            seenResponseIds.add(insertedId);
+          }
+          if(winner in chartCounts){
+            chartCounts[winner] += 1;
+            updateChart(chartElements, chartCounts);
+          }
+        });
+    }
   }
 
+  if(supabaseClient){
+    loadDailyCounts(supabaseClient, dateKey, chartCounts)
+      .then((ids)=>{
+        ids.forEach((id)=>seenResponseIds.add(id));
+        updateChart(chartElements, chartCounts);
+        const channel = supabaseClient
+          .channel('quiz-responses')
+          .on(
+            'postgres_changes',
+            { event: 'INSERT', schema: 'public', table: 'quiz_responses', filter: `quiz_date=eq.${dateKey}` },
+            (payload)=>{
+              const row = payload.new || {};
+              if(row.id && seenResponseIds.has(row.id)) return;
+              if(row.id) seenResponseIds.add(row.id);
+              if(row.winner in chartCounts){
+                chartCounts[row.winner] += 1;
+                updateChart(chartElements, chartCounts);
+              }
+            }
+          )
+          .subscribe();
+        setChartStatus('Live updates enabled.', false);
+      })
+      .catch((error)=>{
+        setChartStatus(`Failed to load stats: ${error.message}`, true);
+      });
+  }
+
+  updateChart(chartElements, chartCounts);
   showQuestion();
 });
