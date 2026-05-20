@@ -3,15 +3,15 @@
   "description": "Answer a few fun questions and we'll match you to a professor.",
   "results": {
     "Benson Farb": {
-      "description": "",
+      "description": "You are not afraid to say what you think. In fact you can hardly stop saying whatever you think at all times. You have no sense of what is appropriate and are perfectly willing to interrupt anyone.",
       "image": "pictures/profs/benson.png"
     },
     "Matthew Emerton": {
-      "description": "",
+      "description": "You are spending $2000 a year for Plein Air cafe. Your mailbox is a black hole. You love writing “x” on the board and discussing the meaning of it.",
       "image": "pictures/profs/matt.png"
     },
     "Bảo Châu Ngô": {
-      "description": "",
+      "description": "You are most likely to be seen smoking a cigarette. You keep your thoughts to yourself and are ready to leave Chicago for greener pastures.",
       "image": "pictures/profs/ngo.png"
     },
     "Amie Wilkinson": {
@@ -23,27 +23,27 @@
       "image": "pictures/profs/andre.png"
     },
     "Peter May": {
-      "description": "",
+      "description": "You don’t let your age get in your way under any circumstance.",
       "image": "pictures/profs/peter.jpg"
     },
     "Yu Deng": {
-      "description": "",
+      "description": "You play go in every waking hour. You sleep in seminars like it’s your job. The department does not tie you down, which is why you do not frequent it very often.",
       "image": "pictures/profs/yu.png"
     },
     "Marianna Csörnyei": {
-      "description": "",
+      "description": "You live for the Kakeya set. You have a childlike laughter. You end every lecture with “nothing happened”.",
       "image": "pictures/profs/marianna.png"
     },
     "Danny Calegari": {
-      "description": "",
+      "description": "Your handwriting is harder to decode than RSA cryptography, but you have the drawing skills of a master artist.",
       "image": "pictures/profs/danny.png"
     },
     "Kazuya Kato": {
-      "description": "",
+      "description": "You are an oracle that speaks in parables and stories.",
       "image": "pictures/profs/kato.png"
     },
     "Victor Ginzburg": {
-      "description": "",
+      "description": "Your mind is full of geometric pictures and inklings of ideas you saw 20 years ago, but you will not be able to provide details unless you have spent hours preparing beforehand. No one has ever seen you on campus before noon.",
       "image": "pictures/profs/victor.png"
     }
   },
